@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>resonance</title>
+
+<link href="https://fonts.googleapis.com/css2?family=inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'inter', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0b0f14, #0e1117, #0a0c10);
+    color: #e6e6e6;
+    padding: 50px;
+}
+
+.header {
+    margin-bottom: 50px;
+}
+
+.header h1 {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #ffffff;
+}
+
+.subtitle {
+    font-size: 14px;
+    opacity: 0.4;
+    margin-top: 6px;
+}
+
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 30px;
+}
+
+.album-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.album-card {
+    background: rgba(255,255,255,0.03);
+    border-radius: 18px;
+    padding: 18px;
+    transition: 0.35s ease;
+    cursor: pointer;
+}
+
+.album-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255,255,255,0.06);
+}
+
+.album-cover {
+    width: 100%;
+    height: 240px;
+    border-radius: 14px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.album-title {
+    font-weight: 600;
+    font-size: 17px;
+    color: #ffffff;
+}
+
+.album-artist {
+    font-size: 13px;
+    opacity: 0.5;
+    margin-top: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>resonance</h1>
+    <div class="subtitle">home</div>
+</div>
+
+<div class="album-grid">
+
+    <a href="playlistsalbums/" class="album-link">
+        <div class="album-card">
+            <img src="https://picsum.photos/500?random=11" class="album-cover">
+            <div class="album-title">nocturnal drift</div>
+            <div class="album-artist">treylist</div>
+        </div>
+    </a>
+
+    <a href="playlistsalbums/questionmark.html" class="album-link">
+        <div class="album-card">
+            <img src="ss/questionmarkcoverplaylist.png" class="album-cover">
+            <div class="album-title">????????</div>
+            <div class="album-artist">dev</div>
+        </div>
+    </a>
+
+</div>
+
+</body>
+</html>

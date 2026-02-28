@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>resonance — nocturnal drift</title>
+
+<link href="https://fonts.googleapis.com/css2?family=inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'inter', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle at 30% 30%, #2a1f2f, #0b0f14 60%);
+    color: #e8e8e8;
+    padding: 50px;
+    padding-bottom: 120px;
+}
+
+.header-section {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.album-cover {
+    width: 260px;
+    height: 260px;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
+.album-meta h1 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.album-details {
+    opacity: 0.5;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.track-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 80px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+.track-row:hover {
+    background: rgba(255,255,255,0.06);
+}
+
+.track-number {
+    opacity: 0.4;
+}
+
+.track-duration {
+    text-align: right;
+    opacity: 0.4;
+}
+
+/* bottom player */
+
+.player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #0b0f14;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 12px 25px;
+}
+
+.player-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.progress-container {
+    flex: 1;
+    margin: 0 20px;
+}
+
+.progress {
+    width: 100%;
+}
+
+.time {
+    font-size: 12px;
+    opacity: 0.5;
+    margin: 0 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header-section">
+    <img src="https://picsum.photos/600?random=11" class="album-cover">
+    <div class="album-meta">
+        <h1>nocturnal drift</h1>
+        <div class="album-details">treylist • 2026 • 6 tracks</div>
+    </div>
+</div>
+
+<div class="track-list">
+
+    <div class="track-row" onclick="loadSong(0)">
+        <div class="track-number">01</div>
+        <div>midnight echo</div>
+        <div class="track-duration">2:49</div>
+    </div>
+
+    <div class="track-row" onclick="loadSong(1)">
+        <div class="track-number">02</div>
+        <div>low tide memory</div>
+        <div class="track-duration">3:30</div>
+    </div>
+
+    <div class="track-row" onclick="loadSong(2)">
+        <div class="track-number">03</div>
+        <div>distant signals</div>
+        <div class="track-duration">3:56</div>
+    </div>
+
+</div>
+
+<!-- bottom player -->
+
+<div class="player">
+    <div class="player-content">
+        <div class="controls">
+            <button onclick="prevSong()">⏮</button>
+            <button onclick="togglePlay()" id="playBtn">▶</button>
+            <button onclick="nextSong()">⏭</button>
+        </div>
+
+        <span class="time" id="currentTime">0:00</span>
+
+        <div class="progress-container">
+            <input type="range" min="0" max="100" value="0" class="progress" id="progress">
+        </div>
+
+        <span class="time" id="duration">0:00</span>
+    </div>
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+const songs = [
+    { title: "midnight echo", src: "chulo.rocks/songs/redo.mp3" },
+    { title: "low tide memory", src: "songs/Modern Baseball - Low Tide Memory.mp3" },
+    { title: "distant signals", src: "songs/Modern Baseball - Distant Signals.mp3" }
+];
+
+let currentSong = 0;
+const audio = document.getElementById("audio");
+const progress = document.getElementById("progress");
+const currentTimeEl = document.getElementById("currentTime");
+const durationEl = document.getElementById("duration");
+const playBtn = document.getElementById("playBtn");
+
+function loadSong(index) {
+    currentSong = index;
+    audio.src = songs[index].src;
+    audio.play();
+    playBtn.textContent = "⏸";
+}
+
+function togglePlay() {
+    if (audio.paused) {
+        audio.play();
+        playBtn.textContent = "⏸";
+    } else {
+        audio.pause();
+        playBtn.textContent = "▶";
+    }
+}
+
+function prevSong() {
+    currentSong = (currentSong - 1 + songs.length) % songs.length;
+    loadSong(currentSong);
+}
+
+function nextSong() {
+    currentSong = (currentSong + 1) % songs.length;
+    loadSong(currentSong);
+}
+
+audio.addEventListener("timeupdate", () => {
+    const progressPercent = (audio.currentTime / audio.duration) * 100;
+    progress.value = progressPercent || 0;
+
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+    durationEl.textContent = formatTime(audio.duration);
+});
+
+progress.addEventListener("input", () => {
+    audio.currentTime = (progress.value / 100) * audio.duration;
+});
+
+function formatTime(time) {
+    if (isNaN(time)) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60).toString().padStart(2, "0");
+    return `${minutes}:${seconds}`;
+}
+</script>
+
+</body>
+</html>
