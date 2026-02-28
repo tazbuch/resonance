@@ -123,10 +123,10 @@ button {
 <body>
 
 <div class="header-section">
-    <img src="https://picsum.photos/600?random=11" class="album-cover">
+    <img src="chulo.rocks/ss/questionmarkcoverplaylist.png" class="album-cover">
     <div class="album-meta">
-        <h1>nocturnal drift</h1>
-        <div class="album-details">treylist • 2026 • 6 tracks</div>
+        <h1>????????</h1>
+        <div class="album-details">dev</div>
     </div>
 </div>
 
@@ -134,20 +134,17 @@ button {
 
     <div class="track-row" onclick="loadSong(0)">
         <div class="track-number">01</div>
-        <div>midnight echo</div>
-        <div class="track-duration">2:49</div>
+        <div>re-do - modern baseball</div>
     </div>
 
     <div class="track-row" onclick="loadSong(1)">
         <div class="track-number">02</div>
-        <div>low tide memory</div>
-        <div class="track-duration">3:30</div>
+        <div>imposter syndrome</div>
     </div>
 
     <div class="track-row" onclick="loadSong(2)">
         <div class="track-number">03</div>
         <div>distant signals</div>
-        <div class="track-duration">3:56</div>
     </div>
 
 </div>
@@ -176,9 +173,9 @@ button {
 
 <script>
 const songs = [
-    { title: "midnight echo", src: "chulo.rocks/songs/redo.mp3" },
-    { title: "low tide memory", src: "songs/Modern Baseball - Low Tide Memory.mp3" },
-    { title: "distant signals", src: "songs/Modern Baseball - Distant Signals.mp3" }
+    { title: "re-do - modern baseball", src: "https://chulo.rocks/songs/redo.mp3" },
+    { title: "imposter syndrome", src: "https://chulo.rocks/songs/imposter.mp3" },
+    { title: "distant signals", src: "https://chulo.rocks/songs/021.mp3" }
 ];
 
 let currentSong = 0;
@@ -191,13 +188,14 @@ const playBtn = document.getElementById("playBtn");
 function loadSong(index) {
     currentSong = index;
     audio.src = songs[index].src;
-    audio.play();
+    audio.load();
+    audio.play().catch(err => console.log("Autoplay blocked:", err));
     playBtn.textContent = "⏸";
 }
 
 function togglePlay() {
     if (audio.paused) {
-        audio.play();
+        audio.play().catch(err => console.log("Autoplay blocked:", err));
         playBtn.textContent = "⏸";
     } else {
         audio.pause();
@@ -216,15 +214,18 @@ function nextSong() {
 }
 
 audio.addEventListener("timeupdate", () => {
-    const progressPercent = (audio.currentTime / audio.duration) * 100;
-    progress.value = progressPercent || 0;
-
-    currentTimeEl.textContent = formatTime(audio.currentTime);
-    durationEl.textContent = formatTime(audio.duration);
+    if (audio.duration) {
+        const progressPercent = (audio.currentTime / audio.duration) * 100;
+        progress.value = progressPercent;
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+        durationEl.textContent = formatTime(audio.duration);
+    }
 });
 
 progress.addEventListener("input", () => {
-    audio.currentTime = (progress.value / 100) * audio.duration;
+    if (audio.duration) {
+        audio.currentTime = (progress.value / 100) * audio.duration;
+    }
 });
 
 function formatTime(time) {
@@ -233,6 +234,9 @@ function formatTime(time) {
     const seconds = Math.floor(time % 60).toString().padStart(2, "0");
     return `${minutes}:${seconds}`;
 }
+
+// Load the first song automatically
+loadSong(currentSong);
 </script>
 
 </body>
